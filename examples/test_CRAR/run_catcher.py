@@ -10,7 +10,7 @@ import os
 
 from deer.default_parser import process_args
 from deer.agent import NeuralAgent
-from deer.learning_algos.CRAR_modif_keras import CRAR
+from deer.learning_algos.CRAR_keras import CRAR
 from catcher_env import MyEnv as catcher_env
 import deer.experiment.base_controllers as bc
 
@@ -45,7 +45,7 @@ class Defaults:
     MOMENTUM = 0
     CLIP_NORM = 1.0
     EPSILON_START = 1.0
-    EPSILON_MIN = 1.0
+    EPSILON_MIN = 0.1#1.0
     EPSILON_DECAY = 10000
     UPDATE_FREQUENCY = 1
     REPLAY_MEMORY_SIZE = 1000000
@@ -85,7 +85,7 @@ if __name__ == "__main__":
         high_int_dim=HIGH_INT_DIM,
         internal_dim=3)
     
-    test_policy = EpsilonGreedyPolicy(learning_algo, env.nActions(), rng, 0.1)#1.)
+    test_policy = EpsilonGreedyPolicy(learning_algo, env.nActions(), rng, 0.)
 
     # --- Instantiate agent ---
     agent = NeuralAgent(

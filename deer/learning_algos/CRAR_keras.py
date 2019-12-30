@@ -8,11 +8,12 @@ from keras.optimizers import SGD,RMSprop
 from keras import backend as K
 from ..base_classes import LearningAlgo
 from .NN_CRAR_keras import NN # Default Neural network used
-#import tensorflow as tf
-#config = tf.ConfigProto()
-#config.gpu_options.allow_growth=True
-#sess = tf.Session(config=config)
+import tensorflow as tf
+config = tf.ConfigProto()
+config.gpu_options.allow_growth=True
+sess = tf.Session(config=config)
 import copy
+import pdb
 
 def mean_squared_error_p(y_true, y_pred):
     """ Modified mean square error that clips
@@ -199,15 +200,15 @@ class CRAR(LearningAlgo):
         
         onehot_actions = np.zeros((self._batch_size, self._n_actions))
         onehot_actions[np.arange(self._batch_size), actions_val] = 1
-        onehot_actions_rand = np.zeros((self._batch_size, self._n_actions))
-        onehot_actions_rand[np.arange(self._batch_size), np.random.randint(0,2,(32))] = 1
+        #onehot_actions_rand = np.zeros((self._batch_size, self._n_actions))
+        #onehot_actions_rand[np.arange(self._batch_size), np.random.randint(0,2,(32))] = 1
         states_val=list(states_val)
         next_states_val=list(next_states_val)
             
-        Es_=self.encoder.predict(next_states_val)
-        Es=self.encoder.predict(states_val)
-        ETs=self.transition.predict([Es,onehot_actions])
-        R=self.R.predict([Es,onehot_actions])
+        Es_= self.encoder.predict(next_states_val)
+        Es = self.encoder.predict(states_val)
+        ETs = self.transition.predict([Es,onehot_actions])
+        R = self.R.predict([Es,onehot_actions])
                    
         if(self.update_counter%500==0):
             print ("Printing a few elements useful for debugging:")
@@ -402,7 +403,7 @@ class CRAR(LearningAlgo):
 #        #print "next_x_predicted action 0 t4"
 #        #print next_x_predicted
 #        ## END DEBUG PURPOSES
-
+        #pdb.set_trace()
         QD_plan=0
         for i in range(d+1):
             Qd=self.qValues_planning_abstr(encoded_x, R, gamma, T, Q, d=i, branching_factor=[self._n_actions,2,2,2,2,2,2,2]).reshape(len(encoded_x),-1)
@@ -440,7 +441,8 @@ class CRAR(LearningAlgo):
         """
         #if(branching_factor==None or branching_factor>self._n_actions):
         #    branching_factor=self._n_actions
-        
+        import pdb
+        pdb.set_trace()
         n=len(state_abstr_val)
         identity_matrix = np.identity(self._n_actions)
         
@@ -503,7 +505,8 @@ class CRAR(LearningAlgo):
 
         if(mode==None):
             mode=0
-        di=[0,1,3,6]
+        #di=[0,1,3,6]
+        di = [1]
         # We use the mode to define the planning depth
         q_vals = self.qValues_planning([np.expand_dims(s,axis=0) for s in copy_state],self.R,self.gamma, self.transition, self.Q, d=di[mode])
 

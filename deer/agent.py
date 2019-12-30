@@ -349,7 +349,6 @@ class NeuralAgent(object):
         reward : float
             Reward obtained for the transition
         """
-
         action, V = self._chooseAction()
         reward=0
         for i in range(self.sticky_action):
@@ -372,7 +371,7 @@ class NeuralAgent(object):
         else:
             if self._dataset.n_elems > self._replay_start_size:
                 # follow the train policy
-                action, V = self._train_policy.action(self._state, mode=None, dataset=self._dataset)     #is self._state the only way to store/pass the state?
+                action, V = self._train_policy.action(self._state, mode=-1, dataset=self._dataset)     #is self._state the only way to store/pass the state?
             else:
                 # Still gathering initial data: choose dummy action
                 action, V = self._train_policy.randomAction()
